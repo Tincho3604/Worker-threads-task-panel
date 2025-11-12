@@ -1,0 +1,1 @@
+export const MEMORY_DEFAULT_VALUE = 1024;

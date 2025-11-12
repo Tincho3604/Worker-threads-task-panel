@@ -1,6 +1,5 @@
-import { time } from "console";
-import { stat } from "fs";
 import { Worker } from "worker_threads";
+import { MEMORY_DEFAULT_VALUE } from "../utils/constants";
 
 interface WorkerInformation {
     threadId: number;
@@ -16,9 +15,9 @@ export class WorkerController {
     public information: WorkerInformation
     private status: number;
 
-    constructor(file: string, threadCount?: number) {
+    constructor(file: string, threadCount: number) {
         this.file = file;
-        this.threadCount = threadCount || 1;
+        this.threadCount = threadCount;
         this.status = 0;
         this.information = {} as WorkerInformation;
    }
@@ -36,7 +35,7 @@ export class WorkerController {
 
     private proccessWorkers(worker: Worker): void {
         worker.on("message", (timestamp) => {
-            const memory = (process.memoryUsage().rss / 1024 / 1024).toFixed(0);
+            const memory = (process.memoryUsage().rss / MEMORY_DEFAULT_VALUE / MEMORY_DEFAULT_VALUE).toFixed(0);
             const cpu = process.cpuUsage();
             this.information = {
                 threadId: worker.threadId,
