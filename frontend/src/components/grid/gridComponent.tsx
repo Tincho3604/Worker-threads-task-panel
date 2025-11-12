@@ -1,6 +1,6 @@
 import './gridComponent.css';
 import type { GridComponentProps } from '../../utils/interfaces';
-
+import { threadStatus } from '../../utils/constants';
 export const GridComponent = (gridValues: GridComponentProps) => {
     return (
         <div className="table-wrapper">
@@ -14,19 +14,19 @@ export const GridComponent = (gridValues: GridComponentProps) => {
                 </thead>
                 <tbody>
                     {gridValues?.rows?.map((row) => (
-                        <tr key={row}>
-                        {row === "Activo" ? (
-                            <>
-                            <td>
-                                <span className="status status--active">
-                                    <span className="status-dot"></span>
-                                    {row}
-                                </span>
-                            </td>
+                        <tr key={row.threadId}>
+                            <>  
+                                <td>{`worker-${row.threadId}`}</td>
+                                <td>
+                                    <span className={`status status--${row.status === 0 ? 'active' : 'loading'}`}>
+                                        <span className="status-dot"></span>
+                                        {threadStatus[row.status]}
+                                    </span>
+                                </td>
+                                <td>{row.cpu}%</td>
+                                <td>{row.memory}</td>
+                                <td>{row.time}</td>
                             </>
-                        ) : (
-                            <td>{row}</td>
-                        )}
                         </tr>
                     ))}
                 </tbody>

@@ -1,11 +1,17 @@
 import './App.css'
 import { GridComponent } from './components/grid/gridComponent';
 // import type { GridComponentProps } from './utils/interfaces';
+import { response } from './utils/constants';
 
 function App() {
   return (
+
     <div className='main-container-grid'>
-      <GridComponent columns={["Column 1", "Column 2", "Column 3"]} rows={["Activo", "Row 2", "Row 3"]} />
+      {Object.keys(response).map( values => {
+        const { columns, rows } = response[values];
+           return <GridComponent columns={columns} rows={rows} />
+      })}
+
     </div>
   )
 }
