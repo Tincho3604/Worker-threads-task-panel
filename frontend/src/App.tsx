@@ -1,6 +1,5 @@
 import './App.css'
 import { GridComponent } from './components/grid/gridComponent';
-// import type { GridComponentProps } from './utils/interfaces';
 import { response } from './utils/constants';
 import type { rowsProps } from './utils/interfaces';
 import { useEffect, useState } from 'react';
@@ -26,7 +25,6 @@ function App() {
       socket.disconnect();
     };
   }, []);
-
   return (
     <div className='main-container-grid'>
       <GridComponent columns={columns} rows={rows} />

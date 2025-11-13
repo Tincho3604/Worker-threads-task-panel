@@ -1,9 +1,12 @@
 import './gridComponent.css';
 import type { GridComponentProps } from '../../utils/interfaces';
 import { threadStatus } from '../../utils/constants';
+import { Filter } from '../filter/filter';
+
 export const GridComponent = (gridValues: GridComponentProps) => {
     return (
         <div className="table-wrapper">
+            <Filter value={"1"} onChange={(e: any) => { console.log(e)}} />
             <table className="table">
                 <thead>
                     <tr>
