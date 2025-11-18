@@ -17,18 +17,19 @@ export const GridComponent = (gridValues: GridComponentProps) => {
                 </thead>
                 <tbody>
                     {gridValues?.rows?.map((row) => (
-                        <tr key={row.threadId}>
+                        <tr key={row.workerId}>
                             <>  
-                                <td>{`worker-${row.threadId}`}</td>
+                                <td>{`worker-${row.workerId}`}</td>
                                 <td>
-                                    <span className={`status status--${row.status === 0 ? 'active' : 'loading'}`}>
+                                    <span className={`status status--${row.status === 'running' ? 'active' : 'inactive'}`}>
                                         <span className="status-dot"></span>
-                                        {threadStatus[row.status]}
+                                        {row.status === 'running' ? 'Activo' : 'Inactivo'}
                                     </span>
                                 </td>
                                 <td>{row.cpu}%</td>
                                 <td>{row.memory}</td>
                                 <td>{row.time}</td>
+                                <td>{`worker-${row.workerReplacement || 0}`}</td>
                             </>
                         </tr>
                     ))}

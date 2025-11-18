@@ -96,6 +96,6 @@
   background: #10b981;
 }
 
-.status--loading .status-dot {
+.status--inactive .status-dot {
   background: #f59e0b;
 }
