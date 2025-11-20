@@ -4,6 +4,7 @@ import { COLUMNS_DEFAULT } from './utils/constants';
 import type { rowsProps } from './utils/interfaces';
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+import { Filter } from './components/filter/filter';
 
 function App() {
   const [rows, setRows] = useState<rowsProps[]>([]);
@@ -22,7 +23,6 @@ function App() {
     });
     return () => socket.disconnect();
   }, []);
-console.log(rows);
   return (
     <div className='main-container-grid'>
       <GridComponent columns={COLUMNS_DEFAULT} rows={rows} />

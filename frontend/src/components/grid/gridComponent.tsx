@@ -1,11 +1,9 @@
 import './gridComponent.css';
 import type { GridComponentProps } from '../../utils/interfaces';
-import { Filter } from '../filter/filter';
 
 export const GridComponent = (gridValues: GridComponentProps) => {
     return (
         <div className="table-wrapper">
-            <Filter value={"1"} onChange={(e: any) => { console.log(e)}} />
             <table className="table">
                 <thead>
                     <tr>
@@ -29,7 +27,7 @@ export const GridComponent = (gridValues: GridComponentProps) => {
                                 <td>{row.memoryMb}</td>
                                 <td>{row.durationMs}ms</td>
                                 <td>{row.counter}</td>
-                                <td>{`worker-${row.replaceWorker}`}</td>
+                                <td>{row.replaceWorker ? `worker-${row.replaceWorker}` : ""}</td>
                             </>
                         </tr>
                     ))}
