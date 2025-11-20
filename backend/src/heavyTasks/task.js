@@ -1,37 +1,51 @@
-// src/heavyTasks/task.js
-const { parentPort, workerData } = require("worker_threads");
+// /src/workers/task.js
+const { parentPort } = require("worker_threads");
+const { performance } = require("perf_hooks");
 
-parentPort.on("message", async (msg) => {
-  if (msg.type === "run_task") {
-    const iterations = Number(msg.payload) || 100; // payload determina "peso"
-    const chunkSize = 50000; // tamaño de cada bloque de trabajo
-    const start = Date.now();
-    let processed = 0;
+let counter = 50;
 
-    // Ejecutar en chunks para poder postear progreso
-    while (processed < iterations * 100000) {
-      // hacer trabajo pesado en un chunk
-      const max = Math.min(processed + chunkSize, iterations * 100000);
-      for (let i = processed; i < max; i++) {
-        // operación simple que consume CPU
-        const x = i * i;
-      }
-      processed = max;
-
-      // enviar progreso intermedio
-      parentPort.postMessage({
-        type: "progress",
-        processed,
-        timestamp: Date.now() - start
-      });
-    }
-
-    const totalTime = Date.now() - start;
-
-    // tarea finalizada
-    parentPort.postMessage({
-      type: "task_finished",
-      time: `${totalTime}ms`
-    });
-  }
+// escuchar mensajes del main thread
+parentPort.on("message", (msg) => {
+  //console.log("Worker recibió:", msg);
 });
+
+function slowCount() {
+  const startCpu = process.cpuUsage();
+  const startTime = performance.now();
+
+  let work = 0;
+  for (let i = 0; i < 5e7; i++) {
+    work += i;
+  }
+
+  const endTime = performance.now();
+  const cpuDiff = process.cpuUsage(startCpu);
+
+  const memory = (process.memoryUsage().rss / 1024 / 1024).toFixed(2);
+  const cpuUserMs = cpuDiff.user / 1000;
+  const durationMs = (endTime - startTime).toFixed(2);
+
+  parentPort.postMessage({
+    counter,
+    status: "running",
+    memoryMb: memory,
+    cpuUserMs,
+    durationMs
+  });
+
+  if (counter < 0) {
+    parentPort.postMessage({
+    counter,
+    status: "done",
+    memoryMb: memory,
+    cpuUserMs,
+    durationMs
+  });
+    return;
+  }
+
+  counter--;
+  setTimeout(slowCount, 1000);
+}
+
+slowCount();

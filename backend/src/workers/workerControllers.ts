@@ -1,48 +1,73 @@
 import { Worker } from "worker_threads";
-import { MEMORY_DEFAULT_VALUE } from "../utils/constants";
-import { WorkerInformation } from "../utils/interfaces";
-
+import path from "path";
+import { WorkerManager, WorkerInfo } from "./workerManager";
 
 export class WorkerController {
     private readonly file: string;
-    private readonly threadCount: number;
-    public information: WorkerInformation;
-    private status: number;
+    private worker?: Worker;
+    private manager: WorkerManager;
 
-    constructor(file: string, threadCount: number) {
+    constructor(file: string, manager: WorkerManager) {
         this.file = file;
-        this.threadCount = threadCount;
-        this.status = 0;
-        this.information = {} as WorkerInformation;
+        this.manager = manager;
     }
 
-    public createWorker(): Worker {
-        const worker = new Worker(this.file, {
-            workerData: { threadCount: this.threadCount }
+    /**
+     * Inicia el worker y registra los listeners
+     */
+    public start(): void {
+        this.worker = new Worker(this.file);
+
+        const threadId = this.worker.threadId;
+
+        // Registrar el worker en el manager
+        this.manager.registerWorker(threadId, {
+            threadId,
+            status: "starting"
         });
 
-        this.processWorkers(worker);
-        return worker;
-    }
-
-    private processWorkers(worker: Worker): void {
-        worker.on("message", (timestamp) => {
-            const memory = (process.memoryUsage().rss / MEMORY_DEFAULT_VALUE / MEMORY_DEFAULT_VALUE).toFixed(0);
-            const cpu = process.cpuUsage();
-
-            this.information = {
-                workerId: worker.threadId,
-                memory: `${memory} MB`,
-                cpu: cpu.system,
-                status: this.status,
-                time: `${timestamp}ms`
+        this.worker.on("message", (message: WorkerInfo) => {
+            const update: WorkerInfo = {
+                ...message,
+                threadId
             };
+
+            this.manager.updateWorker(threadId, update);
         });
 
-        worker.on("error", (error) => {
-            console.error("Error en el worker:", error);
+        this.worker.on("error", (error: Error) => {
+            console.error(`Error en worker ${threadId}:`, error);
+
+            this.manager.updateWorker(threadId, {
+                threadId,
+                status: "error",
+                message: error.message
+            });
         });
 
-        worker.postMessage(worker.threadId);
+        this.worker.on("exit", (code) => {
+            console.log(`🔴 Worker ${threadId} finalizado con código:`, code);
+
+            this.manager.updateWorker(threadId, {
+                threadId,
+                status: "finished",
+                exitCode: code
+            });
+        });
+
+        // Enviar mensaje inicial
+        this.worker.postMessage({
+            threadId,
+            action: "start"
+        });
+    }
+
+    /**
+     * Permite terminar el worker manualmente
+     */
+    public stop(): void {
+        if (this.worker) {
+            this.worker.terminate();
+        }
     }
 }

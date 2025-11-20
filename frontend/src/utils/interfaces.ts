@@ -1,10 +1,11 @@
 export interface rowsProps {
-    workerId: number;
-    memory: string;
-    cpu: number;
+    threadId: number;
+    memoryMb: string;
+    cpuUserMs: number;
     status: string;
-    time: string;
-    workerReplacement: number;
+    durationMs: string;
+    workerReplacement?: number;
+    counter?: number;
 }
 
 export interface GridComponentProps {

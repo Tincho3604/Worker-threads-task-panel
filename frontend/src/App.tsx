@@ -9,31 +9,27 @@ function App() {
   const [columns] = useState<string[]>(response.mainThreat.columns);
   const [rows, setRows] = useState<rowsProps[]>([]);
 
-  useEffect(() => {
-    fetch('http://localhost:3000/workers').catch(() => {});
+  useEffect(():any => {
     const socket = io('http://localhost:3000', { transports: ['websocket'] });
-    socket.on('initialData', (payload) => {
-      console.log("initialData: ", payload);
 
+    socket.on("worker_update", (info) => {
+      const { workers } = info;
       setRows(prev => {
-        // si ya tengo data, NO la pises
-        if (prev.length > 0) return prev;
-
-        return payload.workers.map((values: any) => ({
-          ...values
-        }));
+        const merge = [...prev, ...workers];
+        const map = new Map(merge.map(item => [item.threadId, item]));
+        const result = Array.from(map.values());
+        return result;
       });
     });
-    return () => {
-      socket.disconnect();
-    };
-  }, []); 
 
+    return () => socket.disconnect();
+  }, []);
+ console.log(rows)
   return (
     <div className='main-container-grid'>
       <GridComponent columns={columns} rows={rows} />
     </div>
-  )
+  );
 }
 
 export default App;

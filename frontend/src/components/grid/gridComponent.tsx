@@ -1,6 +1,5 @@
 import './gridComponent.css';
 import type { GridComponentProps } from '../../utils/interfaces';
-import { threadStatus } from '../../utils/constants';
 import { Filter } from '../filter/filter';
 
 export const GridComponent = (gridValues: GridComponentProps) => {
@@ -17,19 +16,19 @@ export const GridComponent = (gridValues: GridComponentProps) => {
                 </thead>
                 <tbody>
                     {gridValues?.rows?.map((row) => (
-                        <tr key={row.workerId}>
+                        <tr key={row.threadId}>
                             <>  
-                                <td>{`worker-${row.workerId}`}</td>
+                                <td>{`worker-${row.threadId}`}</td>
                                 <td>
                                     <span className={`status status--${row.status === 'running' ? 'active' : 'inactive'}`}>
                                         <span className="status-dot"></span>
                                         {row.status === 'running' ? 'Activo' : 'Inactivo'}
                                     </span>
                                 </td>
-                                <td>{row.cpu}%</td>
-                                <td>{row.memory}</td>
-                                <td>{row.time}</td>
-                                <td>{`worker-${row.workerReplacement || 0}`}</td>
+                                <td>{row.cpuUserMs}%</td>
+                                <td>{row.memoryMb}</td>
+                                <td>{row.durationMs}</td>
+                                <td>{row.counter}</td>
                             </>
                         </tr>
                     ))}

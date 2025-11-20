@@ -27,8 +27,7 @@ export class WorkerPoolManager {
       const id = this.nextId++;
 
       const controller = new WorkerController(
-        path.resolve(__dirname, "../heavyTasks/task.js"),
-        id
+        path.resolve(__dirname, "../heavyTasks/task.js")
       );
 
       const worker = controller.createWorker();
