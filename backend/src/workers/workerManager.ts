@@ -5,7 +5,7 @@ export interface WorkerInfo {
     progress?: number;
     status?: string;
     message?: string;
-    [key: string]: any; // permite agregar info extra del worker
+    [key: string]: any;
 }
 
 export interface WorkerBroadcastPayload {
@@ -23,7 +23,7 @@ export class WorkerManager {
     }
 
     /**
-     * Registra un nuevo worker
+     * Método que registra un nuevo worker
      */
     public registerWorker(threadId: number, info: WorkerInfo): void {
         this.workers.set(threadId, info);
@@ -31,7 +31,7 @@ export class WorkerManager {
     }
 
     /**
-     * Actualiza la información de un worker existente
+     * Método que actualiza la información de un worker existente
      */
     public updateWorker(threadId: number, info: WorkerInfo): void {
         this.workers.set(threadId, info);
@@ -39,7 +39,7 @@ export class WorkerManager {
     }
 
     /**
-     * Envía el estado de todos los workers a los clientes conectados
+     * Método que envía el estado de todos los workers a los clientes conectados
      */
     private broadcast(): void {
         const payload: WorkerBroadcastPayload = {
@@ -51,7 +51,7 @@ export class WorkerManager {
     }
 
     /**
-     * Devuelve el estado actual de todos los workers
+     * Método que devuelve el estado actual de todos los workers
      */
     public getData(): WorkerBroadcastPayload {
         return {
