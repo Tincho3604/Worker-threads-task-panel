@@ -27,8 +27,9 @@ export const GridComponent = (gridValues: GridComponentProps) => {
                                 </td>
                                 <td>{row.cpuUserMs}%</td>
                                 <td>{row.memoryMb}</td>
-                                <td>{row.durationMs}</td>
+                                <td>{row.durationMs}ms</td>
                                 <td>{row.counter}</td>
+                                <td>{`worker-${row.threadId}`}</td>
                             </>
                         </tr>
                     ))}

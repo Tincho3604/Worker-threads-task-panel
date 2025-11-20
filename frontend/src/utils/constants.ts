@@ -6,6 +6,7 @@
       "CPU (%)",
       "RAM (MB)",
       "Tiempo de ejecución",
+      "Tiempo de finalización",
       "Reemplazo de worker"
     ],
     rows: [

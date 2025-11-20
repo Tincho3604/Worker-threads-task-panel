@@ -24,7 +24,7 @@ function App() {
 
     return () => socket.disconnect();
   }, []);
- console.log(rows)
+
   return (
     <div className='main-container-grid'>
       <GridComponent columns={columns} rows={rows} />
