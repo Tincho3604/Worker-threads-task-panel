@@ -2,7 +2,7 @@
 const { parentPort } = require("worker_threads");
 const { performance } = require("perf_hooks");
 
-let counter = 50;
+let counter = Math.floor(Math.random() * (50 - 15 + 1)) + 15;;
 
 // escuchar mensajes del main thread
 parentPort.on("message", (msg) => {
