@@ -13,9 +13,24 @@ export class WorkerController {
     }
 
     /**
-     * Inicia el worker y registra los listeners
+     * Método Reemplaza el worker actual con uno nuevo.
      */
-    public start(): void {
+    public replaceWorker(threadId: number): void {
+        console.log("Reemplazando worker", threadId);
+        const worker = new WorkerController(
+            path.resolve(__dirname, "../heavyTasks/task.js"),
+            this.manager
+        );
+        worker.start(threadId);
+    }
+
+    /**
+     * Método Inicia el worker y registra los listeners
+     */
+    public start(idToReplace?: number): void {
+        if(idToReplace){
+            console.log("Reemplazando worker", idToReplace);
+        }
         this.worker = new Worker(this.file);
 
         const threadId = this.worker.threadId;
@@ -27,9 +42,11 @@ export class WorkerController {
         });
 
         this.worker.on("message", (message: WorkerInfo) => {
+            if (message.status === "done") this.replaceWorker(threadId);
             const update: WorkerInfo = {
                 ...message,
-                threadId
+                threadId,
+                replaceWorker: idToReplace || 0
             };
 
             this.manager.updateWorker(threadId, update);
@@ -46,7 +63,7 @@ export class WorkerController {
         });
 
         this.worker.on("exit", (code) => {
-            console.log(`🔴 Worker ${threadId} finalizado con código:`, code);
+            console.log(`Worker ${threadId} finalizado con código:`, code);
 
             this.manager.updateWorker(threadId, {
                 threadId,
@@ -63,7 +80,7 @@ export class WorkerController {
     }
 
     /**
-     * Permite terminar el worker manualmente
+     * Método que permite terminar el worker manualmente
      */
     public stop(): void {
         if (this.worker) {

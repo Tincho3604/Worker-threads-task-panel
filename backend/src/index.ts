@@ -23,7 +23,7 @@ for(let i = 0; i < 5; i++) {
 const worker = new WorkerController(
     path.resolve(__dirname, "./heavyTasks/task.js"),
     workerManager
-);
+  );
 worker.start();
 }
 

@@ -22,7 +22,7 @@ function App() {
     });
     return () => socket.disconnect();
   }, []);
-
+console.log(rows);
   return (
     <div className='main-container-grid'>
       <GridComponent columns={COLUMNS_DEFAULT} rows={rows} />

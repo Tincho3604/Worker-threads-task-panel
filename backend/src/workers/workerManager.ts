@@ -5,6 +5,7 @@ export interface WorkerInfo {
     progress?: number;
     status?: string;
     message?: string;
+    replaceWorker?: number;
     [key: string]: any;
 }
 

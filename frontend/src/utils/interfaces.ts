@@ -4,7 +4,7 @@ export interface rowsProps {
     cpuUserMs: number;
     status: string;
     durationMs: string;
-    workerReplacement?: number;
+    replaceWorker?: number;
     counter?: number;
 }
 
