@@ -24,14 +24,9 @@ const worker = new WorkerController(
     path.resolve(__dirname, "./heavyTasks/task.js"),
     workerManager
   );
-worker.start();
+  worker.start();
 }
 
-
-io.on("connection", (socket) => {
-    console.log("Cliente conectado:", socket.id);
-    socket.emit("initialData", workerManager.getData());
-});
   app.get("/workers", (_req, res) => {
     res.send(workerManager.getData());
 });
